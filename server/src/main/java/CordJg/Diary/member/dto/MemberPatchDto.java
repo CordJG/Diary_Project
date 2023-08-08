@@ -1,10 +1,13 @@
 package CordJg.Diary.member.dto;
 
-import javax.validation.constraints.NotBlank;
+import lombok.Getter;
 
+
+
+@Getter
 public class MemberPatchDto {
 
-    private String nickName;
+    private String name;
 
     private String password;
 }

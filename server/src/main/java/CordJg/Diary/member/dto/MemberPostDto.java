@@ -14,7 +14,7 @@ public class MemberPostDto {
     @Email
     private String email;
     @NotBlank
-    private String nickName;
+    private String name;
 
     @NotBlank
     private String password;

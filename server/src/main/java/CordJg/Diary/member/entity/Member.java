@@ -9,6 +9,8 @@ import lombok.*;
 
 
 @Entity
+@Getter
+@Setter
 public class Member {
 
     @Id
@@ -16,6 +18,7 @@ public class Member {
     private Long memberId;
 
     private String email;
+    private String name;
     private String image;
     private int password;
 }
