@@ -7,6 +7,8 @@ import CordJg.Diary.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface MemberMapper {
 
@@ -14,5 +16,6 @@ public interface MemberMapper {
 
     Member patchToEntity(MemberPatchDto patchDto);
 
-    MemberResponseDto EntityToResponse(Member member);
+    MemberResponseDto entityToResponse(Member member);
+    List<MemberResponseDto> entitysToResponses(List<Member> members);
 }
