@@ -11,7 +11,8 @@ public enum ExceptionCode {
     JWT_TOKEN_EXPIRED(404, "토큰 기한이 만료되었습니다"),
     MEMBER_IS_DELETED(404, "정지 회원입니다"),
     MEMBER_EXISTS(404, "회원이 존재 합니다"),
-    NO_PERMISSION_EDITING(404, "권한이 없습니다");
+    NO_PERMISSION_EDITING(404, "권한이 없습니다"),
+    PASSWORD_IS_NOT_CORRECT(404,"비밀번호가 일치하지 않습니다");
 
     @Getter
     private int status;

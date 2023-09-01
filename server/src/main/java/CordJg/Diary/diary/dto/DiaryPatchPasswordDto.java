@@ -5,13 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class DiaryPatchDto {
+public class DiaryPatchPasswordDto {
 
-    private String name;
+    @NotBlank
     private String password;
+
+    @NotBlank
+    private String newPassword;
 }

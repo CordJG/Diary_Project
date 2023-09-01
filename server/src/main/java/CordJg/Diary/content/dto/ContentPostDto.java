@@ -1,22 +1,22 @@
 package CordJg.Diary.content.dto;
 
-import CordJg.Diary.content.entity.Content;
-import lombok.Getter;
 
-import javax.persistence.Column;
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import javax.validation.constraints.NotBlank;
+
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class ContentPostDto {
+
+    @NotBlank
     private String title;
+    @NotBlank
     private String body;
 
-    private LocalDate date;
-
-    private Content.Feel feel;
-
-
-    public void setDate(int year, int month, int day) {
-        this.date = LocalDate.of(year, month, day);
-    }
 }

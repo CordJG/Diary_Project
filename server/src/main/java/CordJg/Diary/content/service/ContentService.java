@@ -1,5 +1,6 @@
 package CordJg.Diary.content.service;
 
+import CordJg.Diary.content.dto.ContentPatchDateDto;
 import CordJg.Diary.content.dto.ContentPatchDto;
 import CordJg.Diary.content.entity.Content;
 import CordJg.Diary.content.repository.ContentRepository;
@@ -14,9 +15,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ContentService {
 
-    private ContentRepository repository;
+    private final ContentRepository repository;
 
 
     public Content createContent(Content content) {
@@ -24,17 +26,13 @@ public class ContentService {
         return repository.save(content);
     }
 
-    @Transactional
-    public Content updateContent(ContentPatchDto content) {
-        Content findedContent = findVerifiedContent(content.getDate());
 
-        if(content.getModifyDate()!=null){
-            verifyExistContent(content.getModifyDate());
-            findedContent.setDate(content.getModifyDate());
-        }
+    public Content updateContent(long diaryId, ContentPatchDto content) {
+        Content findedContent = findVerifiedContent(diaryId, content.getDate());
+
+
         if (content.getBody() != null) {
             findedContent.setBody(content.getBody());
-
         }
         if (content.getTitle() != null) {
             findedContent.setTitle(content.getTitle());
@@ -45,13 +43,22 @@ public class ContentService {
         return findedContent;
     }
 
-    public Content findContent(LocalDate date) {
+    public String updateContentDate(long diaryId, ContentPatchDateDto content) {
+        Content findedContent = findVerifiedContent(diaryId, content.getDate());
 
-        return repository.findByDate(date).orElseThrow(() -> new BusinessLogicException(ExceptionCode.DATE_NOT_FOUND));
+        verifyExistContent(diaryId, content.getModifyDate());
+
+        findedContent.setDate(content.getModifyDate());
+
+        String contentTitle = findedContent.getTitle();
+
+
+        return contentTitle + "가 " + content.getDate() + "에서 " + content.getModifyDate() + "로 이동하였습니다";
     }
 
-    public Content findVerifiedContent(LocalDate date) {
-        Optional<Content> optionalContent = repository.findByDate(date);
+
+    public Content findVerifiedContent(long diaryId, LocalDate date) {
+        Optional<Content> optionalContent = repository.findByDiaryDiaryIdAndDate(diaryId, date);
 
         Content findContent = optionalContent.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.DATE_NOT_FOUND));
@@ -59,8 +66,8 @@ public class ContentService {
         return findContent;
     }
 
-    public void verifyExistContent(LocalDate modifiedDate) {
-        Optional<Content> optionalContent = repository.findByDate(modifiedDate);
+    public void verifyExistContent(long diaryId, LocalDate modifiedDate) {
+        Optional<Content> optionalContent = repository.findByDiaryDiaryIdAndDate(diaryId, modifiedDate);
         if (optionalContent.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.DATE_EXISTS);
         }

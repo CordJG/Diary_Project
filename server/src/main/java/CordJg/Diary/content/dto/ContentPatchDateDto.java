@@ -1,17 +1,18 @@
-package CordJg.Diary.diary.dto;
+package CordJg.Diary.content.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class DiaryPatchDto {
+public class ContentPatchDateDto {
+    private LocalDate date;
 
-    private String name;
-    private String password;
+    private LocalDate modifyDate;
 }

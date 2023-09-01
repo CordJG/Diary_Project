@@ -15,7 +15,7 @@ public class Content extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long contentId;
 
     @ManyToOne
     @JoinColumn(name = "DIARY_ID")
@@ -27,20 +27,7 @@ public class Content extends Auditable {
     @Column(nullable = false)
     private String body;
 
-    @Enumerated(value = EnumType.STRING)
-    private Feel feel = Feel.NOT_BAD;
-
-    @Column(unique = true)
-    private LocalDate date;
-
-
-    public enum Feel {
-
-        GOOD,NOT_BAD, BAD;
-
-
-    }
-
-
+    @Column
+    private LocalDate date = LocalDate.now();
 
 }

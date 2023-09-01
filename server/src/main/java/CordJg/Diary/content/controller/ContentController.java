@@ -21,16 +21,16 @@ import javax.validation.constraints.Positive;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/Diary/{diary-id}/Content")
+@RequestMapping("/diary/{diary-id}/content")
 @Validated
 @Slf4j
 public class ContentController {
 
-    private ContentMapper mapper;
-    private ContentService service;
-    private DiaryRepository diaryRepository;
+    private final ContentMapper mapper;
+    private final ContentService service;
+    private final DiaryRepository diaryRepository;
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity postContent(@PathVariable("diary-id") @Positive long diaryId,
                                       @Valid @RequestBody ContentPostDto requestBody) {
         Content content = mapper.postToEntity(requestBody);
@@ -41,14 +41,9 @@ public class ContentController {
 
         Content createdContent = service.createContent(content);
 
-        ContentResponseDto responseDto = mapper.EntityToResponse(createdContent);
+        ContentResponseDto responseDto = mapper.entityToResponse(createdContent);
 
-        responseDto.setMemberId(diary.getMember().getMemberId());
-        responseDto.setMemberName(diary.getMember().getName());
-        responseDto.setDiaryId(diaryId);
-        responseDto.setDiaryName(diary.getName());
-
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
 }

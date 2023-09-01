@@ -17,7 +17,7 @@ public class Diary extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long DiaryId;
+    private Long diaryId;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
@@ -29,7 +29,9 @@ public class Diary extends Auditable {
     @Column(length = 100)
     private String password;
 
+
     @OneToMany(mappedBy = "diary", cascade = {CascadeType.ALL})
     private List<Content> contents = new ArrayList<>();
+
 
 }
