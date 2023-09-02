@@ -11,6 +11,7 @@ import CordJg.Diary.exception.BusinessLogicException;
 import CordJg.Diary.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,14 +34,18 @@ public class ContentController {
 
     @PostMapping
     public ResponseEntity postContent(@PathVariable("diary-id") @Positive long diaryId,
-                                      @Valid @RequestBody ContentPostDto requestBody) {
+                                      @Valid @RequestBody ContentPostDto requestBody,
+                                      @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date ) {
+
         Content content = mapper.postToEntity(requestBody);
+        content.setDate(date);
 
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.DIARY_NOT_FOUND));
 
+
         content.setDiary(diary);
 
-        Content createdContent = service.createContent(content);
+        Content createdContent = service.createContent(content,date);
 
         ContentResponseDto responseDto = mapper.entityToResponse(createdContent);
 

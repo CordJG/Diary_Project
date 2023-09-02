@@ -1,12 +1,13 @@
 package CordJg.Diary.content.service;
 
-import CordJg.Diary.content.dto.ContentPatchDateDto;
+
 import CordJg.Diary.content.dto.ContentPatchDto;
 import CordJg.Diary.content.entity.Content;
 import CordJg.Diary.content.repository.ContentRepository;
 import CordJg.Diary.exception.BusinessLogicException;
 import CordJg.Diary.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,19 +17,22 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ContentService {
 
     private final ContentRepository repository;
 
 
-    public Content createContent(Content content) {
+    public Content createContent(Content content,LocalDate date) {
+
+        verifyExistContent(content.getDiary().getDiaryId(),date);
 
         return repository.save(content);
     }
 
 
-    public Content updateContent(long diaryId, ContentPatchDto content) {
-        Content findedContent = findVerifiedContent(diaryId, content.getDate());
+    public Content updateContent(long diaryId, ContentPatchDto content, LocalDate date) {
+        Content findedContent = findVerifiedContent(diaryId, date);
 
 
         if (content.getBody() != null) {
@@ -43,17 +47,17 @@ public class ContentService {
         return findedContent;
     }
 
-    public String updateContentDate(long diaryId, ContentPatchDateDto content) {
-        Content findedContent = findVerifiedContent(diaryId, content.getDate());
+    public String updateContentDate(long diaryId, LocalDate date, LocalDate modifiedDate) {
+        Content findedContent = findVerifiedContent(diaryId, date);
 
-        verifyExistContent(diaryId, content.getModifyDate());
+        verifyExistContent(diaryId, modifiedDate);
 
-        findedContent.setDate(content.getModifyDate());
+        findedContent.setDate(modifiedDate);
 
         String contentTitle = findedContent.getTitle();
 
 
-        return contentTitle + "가 " + content.getDate() + "에서 " + content.getModifyDate() + "로 이동하였습니다";
+        return contentTitle + "가 " + date + "에서 " + modifiedDate + "로 이동하였습니다";
     }
 
 

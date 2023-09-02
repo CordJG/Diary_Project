@@ -1,9 +1,9 @@
 package CordJg.Diary.content.dto;
 
-import CordJg.Diary.content.entity.Content;
+
+
 import CordJg.Diary.diary.entity.Diary;
-import CordJg.Diary.member.entity.Member;
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,8 +18,6 @@ public class ContentResponseDto {
     private String title;
     private String body;
     private LocalDate date;
-    private String createdAt;
-    private String modifiedAt;
     private long diaryId;
     private String diaryName;
     private long memberId;

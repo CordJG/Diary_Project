@@ -1,6 +1,7 @@
 package CordJg.Diary.content.entity;
 
-import CordJg.Diary.audit.Auditable;
+
+
 import CordJg.Diary.diary.entity.Diary;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,10 +9,11 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+
 @Entity
 @Getter
 @Setter
-public class Content extends Auditable {
+public class Content  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +29,7 @@ public class Content extends Auditable {
     @Column(nullable = false)
     private String body;
 
-    @Column
-    private LocalDate date = LocalDate.now();
+    @Column(unique = true)
+    private LocalDate date;
 
 }
