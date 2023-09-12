@@ -26,7 +26,7 @@ public class Content  {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String body;
 
     @Column(unique = true)
