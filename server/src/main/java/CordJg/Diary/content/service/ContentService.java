@@ -4,10 +4,15 @@ package CordJg.Diary.content.service;
 import CordJg.Diary.content.dto.ContentPatchDto;
 import CordJg.Diary.content.entity.Content;
 import CordJg.Diary.content.repository.ContentRepository;
+import CordJg.Diary.diary.entity.Diary;
+import CordJg.Diary.diary.repository.DiaryRepository;
 import CordJg.Diary.exception.BusinessLogicException;
 import CordJg.Diary.exception.ExceptionCode;
+import CordJg.Diary.member.entity.Member;
+import CordJg.Diary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,6 +26,8 @@ import java.util.Optional;
 public class ContentService {
 
     private final ContentRepository repository;
+    private final MemberRepository memberRepository;
+    private final DiaryRepository diaryRepository;
 
 
     public Content createContent(Content content,LocalDate date) {
@@ -31,7 +38,12 @@ public class ContentService {
     }
 
 
-    public Content updateContent(long diaryId, ContentPatchDto content, LocalDate date) {
+    public Content updateContent(long diaryId, long loginId, Content content, LocalDate date) {
+
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.DIARY_NOT_FOUND));
+
+        verifyPermission(loginId,findDiary.getMember().getMemberId());
+
         Content findedContent = findVerifiedContent(diaryId, date);
 
 
@@ -47,7 +59,11 @@ public class ContentService {
         return findedContent;
     }
 
-    public String updateContentDate(long diaryId, LocalDate date, LocalDate modifiedDate) {
+    public String updateContentDate(long diaryId, long loginId, LocalDate date, LocalDate modifiedDate) {
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.DIARY_NOT_FOUND));
+
+        verifyPermission(loginId,findDiary.getMember().getMemberId());
+
         Content findedContent = findVerifiedContent(diaryId, date);
 
         verifyExistContent(diaryId, modifiedDate);
@@ -58,6 +74,32 @@ public class ContentService {
 
 
         return contentTitle + "가 " + date + "에서 " + modifiedDate + "로 이동하였습니다";
+    }
+
+    public void updateContentSecret(long diaryId,long loginId, LocalDate date) {
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.DIARY_NOT_FOUND));
+
+        verifyPermission(loginId,findDiary.getMember().getMemberId());
+
+        Content findContent = findVerifiedContent(diaryId,date);
+
+        findContent.setSecret(false);
+    }
+
+    public Content findContent(long diaryId, LocalDate date) {
+        Content findedContent = findVerifiedContent(diaryId, date);
+
+        return findedContent;
+    }
+
+    public void deleteContent(long diaryId, long loginId, LocalDate date) {
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.DIARY_NOT_FOUND));
+
+        verifyPermission(loginId,findDiary.getMember().getMemberId());
+
+        Content findContent = findVerifiedContent(diaryId, date);
+
+        repository.delete(findContent);
     }
 
 
@@ -74,6 +116,17 @@ public class ContentService {
         Optional<Content> optionalContent = repository.findByDiaryDiaryIdAndDate(diaryId, modifiedDate);
         if (optionalContent.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.DATE_EXISTS);
+        }
+    }
+
+    private void verifyPermission(Long loginId, long memeberId) {
+        Member findMember = memberRepository.findById(loginId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        if (!findMember.getRoles().contains("ADMIN")) {
+            if (loginId != memeberId) {
+                throw new BusinessLogicException(ExceptionCode.NO_PERMISSION_EDITING);
+            }
         }
     }
 

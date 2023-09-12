@@ -71,6 +71,14 @@ public class DiaryService {
         findDiary.setPassword(patchDto.getNewPassword());
     }
 
+    public void updateSecret(long loginId, long diaryId) {
+        Diary findDiary = findVerifiedDiaryById(diaryId);
+
+        verifyPermission(loginId, findDiary.getMember().getMemberId());
+
+        findDiary.setSecret(false);
+    }
+
     public Diary findDiary(long diaryId) {
         Diary findDiary = findVerifiedDiaryById(diaryId);
 
@@ -113,7 +121,7 @@ public class DiaryService {
 
 
 
-    public void verifyPermission(Long loginId, long memeberId) {
+    private void verifyPermission(Long loginId, long memeberId) {
         Member findMember = memberRepository.findById(loginId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
@@ -124,7 +132,7 @@ public class DiaryService {
         }
     }
 
-    public void checkPassword(String password, Diary findDiary){
+    private void checkPassword(String password, Diary findDiary){
         if(findDiary.getPassword()!=null) {
             if (!password.equals(findDiary.getPassword())) {
                 throw new BusinessLogicException(ExceptionCode.PASSWORD_IS_NOT_CORRECT);

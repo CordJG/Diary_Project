@@ -22,6 +22,8 @@ public class ContentResponseDto {
     private String diaryName;
     private long memberId;
     private String memberName;
+    private boolean secret;
+
 
     public void setDiary(Diary diary){
         this.memberId = diary.getMember().getMemberId();

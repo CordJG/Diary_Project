@@ -29,6 +29,9 @@ public class Diary extends Auditable {
     @Column(length = 100)
     private String password;
 
+    @Column
+    private boolean secret = true;
+
 
     @OneToMany(mappedBy = "diary", cascade = {CascadeType.ALL})
     private List<Content> contents = new ArrayList<>();

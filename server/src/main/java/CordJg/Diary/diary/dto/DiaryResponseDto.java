@@ -14,6 +14,7 @@ public class DiaryResponseDto {
     private String name;
     private long memberId;
     private String memberName;
+    private boolean secret;
     private String createdAt;
     private String modifiedAt;
 

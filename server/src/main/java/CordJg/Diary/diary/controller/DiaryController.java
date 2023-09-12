@@ -39,11 +39,11 @@ public class DiaryController {
 
 
     @PostMapping
-    public ResponseEntity createDiary(@LoginMemberId Long memberId,
+    public ResponseEntity createDiary(@LoginMemberId Long loginId,
                                       @Valid @RequestBody DiaryPostDto requestBoudy) {
         Diary diary = mapper.postToEntity(requestBoudy);
 
-        diary.setMember(memberRepository.getReferenceById(memberId));
+        diary.setMember(memberRepository.getReferenceById(loginId));
 
         Diary createdDiary = service.createDiary(diary);
         DiaryResponseDto responseDto = mapper.entityToResponseDto(createdDiary);
@@ -52,14 +52,14 @@ public class DiaryController {
     }
 
     @GetMapping
-    public ResponseEntity getDiaryList(@LoginMemberId Long memberId) {
-        List<Diary> findDiarys = service.findDiarys(memberId);
+    public ResponseEntity getDiaryList(@LoginMemberId Long loginId) {
+        List<Diary> findDiarys = service.findDiarys(loginId);
         List<DiaryResponseDto> responses = mapper.entityListToResponseList(findDiarys);
 
         return ResponseEntity.ok(new SingleResponseDto<>(responses));
     }
 
-    @GetMapping("/{diary-id}/content")
+    @GetMapping("/{diary-id}/contents")
     public ResponseEntity getContents(@Positive @RequestParam(value = "page", defaultValue = "1") int page,
                                       @Positive @RequestParam(value = "size", defaultValue = "10") int size,
                                       @PathVariable("diary-id") @Positive long diaryId) {
@@ -71,22 +71,30 @@ public class DiaryController {
     }
 
     @PatchMapping("/{diary-id}")
-    public ResponseEntity updateDiary(@LoginMemberId Long memberId,
+    public ResponseEntity updateDiary(@LoginMemberId Long loginId,
                                       @PathVariable("diary-id") @Positive long diaryId,
                                       @Valid @RequestBody DiaryPatchDto requestBody) {
-        Diary updatedDiary = service.updateDiary(memberId, requestBody, diaryId);
+        Diary updatedDiary = service.updateDiary(loginId, requestBody, diaryId);
         DiaryResponseDto response = mapper.entityToResponseDto(updatedDiary);
 
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 
     @PatchMapping("/{diary-id}/password")
-    public ResponseEntity updateDiaryPassword(@LoginMemberId Long memberId,
+    public ResponseEntity updateDiaryPassword(@LoginMemberId Long loginId,
                                               @PathVariable("diary-id") @Positive long diaryId,
                                               @Valid @RequestBody DiaryPatchPasswordDto requestBody) {
-        service.updatePassword(memberId, requestBody, diaryId);
+        service.updatePassword(loginId, requestBody, diaryId);
 
         return ResponseEntity.ok().body("비밀번호가 변경되었습니다");
+    }
+
+    @PatchMapping("/{diary-id}/secret")
+    public ResponseEntity updateDiarySecret(@LoginMemberId Long loginId,
+                                            @PathVariable("diary-id") @Positive long diaryId) {
+        service.updateSecret(loginId, diaryId);
+
+        return ResponseEntity.ok().body("비공개에서 공개로 변경하였습니다");
     }
 
     @DeleteMapping("/{diary-id}")

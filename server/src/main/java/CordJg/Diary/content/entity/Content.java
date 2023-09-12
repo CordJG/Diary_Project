@@ -2,6 +2,7 @@ package CordJg.Diary.content.entity;
 
 
 
+import CordJg.Diary.audit.Auditable;
 import CordJg.Diary.diary.entity.Diary;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,8 @@ public class Content  {
 
     @Column(columnDefinition = "TEXT")
     private String body;
+
+    private boolean secret=true;
 
     @Column(unique = true)
     private LocalDate date;
