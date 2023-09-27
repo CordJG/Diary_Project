@@ -31,8 +31,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
 
-
-
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer ,MemberRepository memberRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
