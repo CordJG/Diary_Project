@@ -36,6 +36,8 @@ dependencies {
 	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	runtimeOnly 'mysql:mysql-connector-java'
 	implementation 'mysql:mysql-connector-java:8.0.28'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0' // Swagger 2
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0' // Swagger UI
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }

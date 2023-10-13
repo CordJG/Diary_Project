@@ -11,6 +11,7 @@ import CordJg.Diary.diary.repository.DiaryRepository;
 import CordJg.Diary.exception.BusinessLogicException;
 import CordJg.Diary.exception.ExceptionCode;
 import CordJg.Diary.security.auth.loginResolver.LoginMemberId;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +36,7 @@ public class ContentController {
     private final DiaryRepository diaryRepository;
 
     @PostMapping
+    @ApiOperation(value = "컨텐츠 생성")
     public ResponseEntity postContent(@PathVariable("diary-id") @Positive long diaryId,
                                       @Valid @RequestBody ContentPostDto requestBody,
                                       @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -43,7 +45,6 @@ public class ContentController {
         content.setDate(date);
 
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.DIARY_NOT_FOUND));
-
 
         content.setDiary(diary);
 
