@@ -12,7 +12,8 @@ public enum ExceptionCode {
     MEMBER_IS_DELETED(404, "정지 회원입니다"),
     MEMBER_EXISTS(404, "회원이 존재 합니다"),
     NO_PERMISSION_EDITING(404, "권한이 없습니다"),
-    PASSWORD_IS_NOT_CORRECT(404,"비밀번호가 일치하지 않습니다");
+    PASSWORD_IS_NOT_CORRECT(404,"비밀번호가 일치하지 않습니다"),
+    TEST(444, "테스트를 위한 예외코드");
 
     @Getter
     private int status;
